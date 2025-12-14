@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Creăm o instanță Axios cu URL-ul de bază al backend-ului tău
 const api = axios.create({
-    baseURL: 'https://localhost:7017/api', // Verifică portul din Swagger-ul tău (cred că era 7017)
+    baseURL: 'http://localhost:5144/api', // Schimbat din https în http
     headers: {
         'Content-Type': 'application/json',
     },

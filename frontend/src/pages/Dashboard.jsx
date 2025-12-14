@@ -27,6 +27,8 @@ function Dashboard() {
 
     return (
         <div style={{ padding: '50px', fontFamily: 'Arial' }}>
+            {/* ❌ Șterge <TopBar /> și <Sidebar /> dacă există */}
+            
             <h1>🏡 Dashboard RoVia</h1>
             
             <div style={{ 
@@ -40,6 +42,23 @@ function Dashboard() {
             </div>
 
             <p>Aici vor apărea în curând harta și atracțiile turistice.</p>
+            
+            <div style={{ marginTop: '20px' }}>
+                <a 
+                    href="/map" 
+                    style={{
+                        display: 'inline-block',
+                        padding: '10px 20px',
+                        backgroundColor: '#3b82f6',
+                        color: 'white',
+                        textDecoration: 'none',
+                        borderRadius: '8px',
+                        fontWeight: '500'
+                    }}
+                >
+                    🗺️ Vezi Harta cu Atracții
+                </a>
+            </div>
 
             <button 
                 onClick={handleLogout}

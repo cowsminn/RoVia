@@ -1,1 +1,11 @@
-{"Version":1,"Hash":"QIh7SOSbwEsf+xTYOLnV3rUlZGRHqqaqPZfM8BUyu3w=","Source":"RoVia.API","BasePath":"_content/RoVia.API","Mode":"Default","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}
+{
+  "Version": 1,
+  "Hash": "Ehz8jVuzgzZEEBHg9jgRy+sfy4dCDg7CwAUl4rrXj+U=",
+  "Source": "RoVia.API",
+  "BasePath": "_content/RoVia.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

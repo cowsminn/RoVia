@@ -5,6 +5,33 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>frontend</title>
+
+    <!-- Preload local font and model (copy them into public/assets as described) -->
+    <link rel="preload" href="/assets/fonts/custom-font.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/models/model.glb" as="fetch" crossorigin>
+
+    <style>
+      /* Register local font (rename files if needed) */
+      @font-face {
+        font-family: 'RoviaUI';
+        src: url('/assets/fonts/custom-font.woff2') format('woff2');
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      /* Global font */
+      html, body, #root {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: "RoviaUI", Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background: #fff;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

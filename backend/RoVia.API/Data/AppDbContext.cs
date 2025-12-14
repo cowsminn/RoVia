@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RoVia.API.Models;
-using System.Collections.Generic;
 
 namespace RoVia.API.Data;
 
@@ -10,7 +9,55 @@ public class AppDbContext : DbContext
         : base(options) { }
 
     public DbSet<User> Users { get; set; }
-    public DbSet<Role> Roles { get; set; }
     public DbSet<Attraction> Attractions { get; set; }
     public DbSet<Quiz> Quizzes { get; set; }
+    public DbSet<Question> Questions { get; set; }
+    public DbSet<Answer> Answers { get; set; }
+    public DbSet<UserProgress> UserProgresses { get; set; }
+    public DbSet<Badge> Badges { get; set; }
+    public DbSet<UserBadge> UserBadges { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        // Quiz relationships
+        modelBuilder.Entity<Quiz>()
+            .HasMany(q => q.Questions)
+            .WithOne(qt => qt.Quiz)
+            .HasForeignKey(qt => qt.QuizId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Question>()
+            .HasMany(qt => qt.Answers)
+            .WithOne(a => a.Question)
+            .HasForeignKey(a => a.QuestionId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // User Progress
+        modelBuilder.Entity<UserProgress>()
+            .HasOne(up => up.User)
+            .WithMany()
+            .HasForeignKey(up => up.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<UserProgress>()
+            .HasOne(up => up.Quiz)
+            .WithMany()
+            .HasForeignKey(up => up.QuizId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        // Badges
+        modelBuilder.Entity<UserBadge>()
+            .HasOne(ub => ub.User)
+            .WithMany()
+            .HasForeignKey(ub => ub.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<UserBadge>()
+            .HasOne(ub => ub.Badge)
+            .WithMany(b => b.UserBadges)
+            .HasForeignKey(ub => ub.BadgeId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
 }

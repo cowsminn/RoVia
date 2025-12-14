@@ -1,0 +1,78 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RoVia.API.Data;
+using RoVia.API.DTOs;
+using RoVia.API.Models;
+
+namespace RoVia.API.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class AttractionsController : ControllerBase
+{
+    private readonly AppDbContext _context;
+
+    public AttractionsController(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<AttractionDto>>> GetAttractions([FromQuery] AttractionFilterRequest filter)
+    {
+        var query = _context.Attractions.AsQueryable();
+
+        if (filter.Type.HasValue)
+            query = query.Where(a => a.Type == filter.Type.Value);
+
+        if (!string.IsNullOrEmpty(filter.Region))
+            query = query.Where(a => a.Region.Contains(filter.Region));
+
+        if (filter.MinRating.HasValue)
+            query = query.Where(a => a.Rating >= filter.MinRating.Value);
+
+        var attractions = await query
+            .Select(a => new AttractionDto
+            {
+                Id = a.Id,
+                Name = a.Name,
+                Description = a.Description,
+                Latitude = a.Latitude,
+                Longitude = a.Longitude,
+                Type = a.Type,
+                TypeName = a.Type.ToString(),
+                Region = a.Region,
+                ImageUrl = a.ImageUrl,
+                Rating = a.Rating
+            })
+            .ToListAsync();
+
+        return Ok(attractions);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<AttractionDto>> GetAttraction(int id)
+    {
+        var attraction = await _context.Attractions
+            .Where(a => a.Id == id)
+            .Select(a => new AttractionDto
+            {
+                Id = a.Id,
+                Name = a.Name,
+                Description = a.Description,
+                Latitude = a.Latitude,
+                Longitude = a.Longitude,
+                Type = a.Type,
+                TypeName = a.Type.ToString(),
+                Region = a.Region,
+                ImageUrl = a.ImageUrl,
+                Rating = a.Rating
+            })
+            .FirstOrDefaultAsync();
+
+        if (attraction == null)
+            return NotFound();
+
+        return Ok(attraction);
+    }
+}
