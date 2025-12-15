@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 function decodeJwt(token) {
 	if (!token) return null;
@@ -26,8 +26,24 @@ function TopBar({ onMenuToggle }) {
 		return payload?.unique_name ?? payload?.name ?? payload?.email ?? payload?.sub ?? 'User';
 	}, []);
 
+	const [dark, setDark] = useState(() => {
+		try {
+			const stored = localStorage.getItem('theme');
+			if (stored) return stored === 'dark';
+			// default to user's OS preference
+			return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+		} catch { return false; }
+	});
+
+	useEffect(() => {
+		const root = document.documentElement;
+		if (dark) root.classList.add('dark');
+		else root.classList.remove('dark');
+		localStorage.setItem('theme', dark ? 'dark' : 'light');
+	}, [dark]);
+
 	return (
-		<div style={{
+		<div className="topbar" style={{
 			position: 'fixed',
 			top: 0,
 			left: 'var(--sidebar-left, 0)',
@@ -37,8 +53,8 @@ function TopBar({ onMenuToggle }) {
 			alignItems: 'center',
 			justifyContent: 'space-between',
 			padding: '0 16px',
-			borderBottom: '1px solid #e5e7eb',
-			background: 'white',
+			borderBottom: '1px solid var(--border)',
+			background: 'var(--topbar-bg)',
 			zIndex: 70
 		}}>
 			{/* Menu button */}
@@ -63,7 +79,7 @@ function TopBar({ onMenuToggle }) {
 			<h1 style={{
 				fontSize: '18px',
 				fontWeight: 'bold',
-				color: '#374151',
+				color: 'var(--text)',
 				position: 'absolute',
 				left: '50%',
 				transform: 'translateX(-50%)'
@@ -76,18 +92,34 @@ function TopBar({ onMenuToggle }) {
 				style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}
 				onClick={() => window.location.href = '/profile'}
 			>
+				{/* Dark mode toggle */}
+				<button
+					onClick={(e) => { e.stopPropagation(); setDark(d => !d); }}
+					aria-label="Toggle dark mode"
+					style={{
+						padding: '8px',
+						borderRadius: '8px',
+						border: 'none',
+						background: 'transparent',
+						cursor: 'pointer',
+						fontSize: '18px'
+					}}
+				>
+					{dark ? '🌙' : '☀️'}
+				</button>
+
 				<div style={{ textAlign: 'right' }}>
-					<p style={{ fontSize: '14px', fontWeight: '500', color: '#374151', margin: 0 }}>
+					<p style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text)', margin: 0 }}>
 						Bună, {username}!
 					</p>
-					<p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>
+					<p style={{ fontSize: '12px', color: 'var(--muted)', margin: 0 }}>
 						Explorer
 					</p>
 				</div>
-				<div style={{
+				<div className="topbar-avatar" style={{
 					width: '40px',
 					height: '40px',
-					backgroundColor: '#3b82f6',
+					backgroundColor: 'var(--avatar-bg)',
 					borderRadius: '50%',
 					display: 'flex',
 					alignItems: 'center',

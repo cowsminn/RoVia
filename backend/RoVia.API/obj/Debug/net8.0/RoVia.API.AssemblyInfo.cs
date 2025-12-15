@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RoVia.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1444bb85bcde14d8f26b28272970592db2b2cc72")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+29d4a8af2f8e7eac2901e7a551b37987e11000f4")]
 [assembly: System.Reflection.AssemblyProductAttribute("RoVia.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RoVia.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
