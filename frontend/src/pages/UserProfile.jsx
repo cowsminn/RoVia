@@ -238,25 +238,7 @@ function UserProfile() {
                         <span>Istoricul călătoriilor</span>
                     </button>
 
-                    <button
-                        onClick={handleLogout}
-                        style={{
-                            padding: '12px 16px',
-                            backgroundColor: '#ef4444',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '8px',
-                            cursor: 'pointer',
-                            textAlign: 'left',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            marginTop: '20px'
-                        }}
-                    >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden focusable="false"><path d="M16 17l5-5-5-5" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/><path d="M21 12H9" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/><path d="M3 5v14a2 2 0 002 2h8" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                        <span>Deconectare</span>
-                    </button>
+                    {/* Logout moved to sidebar; removed from profile actions */}
                 </div>
             </div>
         </div>

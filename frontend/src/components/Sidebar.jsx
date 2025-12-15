@@ -163,15 +163,8 @@ export default function Sidebar({ isOpen, onToggle, onClose }) {
         ) : null}
       </div>
 
-      {/* footer */}
-      {isOpen && (
-        <div style={{ borderTop: '1px solid var(--border)', padding: 12 }}>
-          <div style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>© 2025 Descoperă România</div>
-        </div>
-      )}
-
-      {/* logout footer - stays at bottom */}
-      <div style={{ marginTop: 'auto', padding: 12, borderTop: '1px solid var(--border)' }}>
+      {/* logout above copyright */}
+      <div style={{ padding: 12, borderTop: '1px solid var(--border)' }}>
         {isOpen ? (
           <button onClick={handleLogout} style={{ width: '100%', padding: '10px', borderRadius: 8, border: 'none', background: '#ef4444', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden focusable="false" style={{ flex: '0 0 18px' }}>
@@ -187,6 +180,13 @@ export default function Sidebar({ isOpen, onToggle, onClose }) {
           </button>
         )}
       </div>
+
+      {/* footer */}
+      {isOpen && (
+        <div style={{ borderTop: '1px solid var(--border)', padding: 12 }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>© 2025 Descoperă România</div>
+        </div>
+      )}
     </div>
   );
 }
