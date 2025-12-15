@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Icon = ({ name }) => {
   // SVGs use currentColor so they inherit text color from CSS variables
@@ -13,6 +13,13 @@ const Icon = ({ name }) => {
 };
 
 export default function Sidebar({ isOpen, onToggle, onClose }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    try { localStorage.removeItem('token'); } catch (e) { /* ignore */ }
+    if (onClose) onClose();
+    navigate('/login');
+  };
   // token/role detection (same as before)
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
   let isAuth = false, roleId = null;
@@ -162,6 +169,24 @@ export default function Sidebar({ isOpen, onToggle, onClose }) {
           <div style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>© 2025 Descoperă România</div>
         </div>
       )}
+
+      {/* logout footer - stays at bottom */}
+      <div style={{ marginTop: 'auto', padding: 12, borderTop: '1px solid var(--border)' }}>
+        {isOpen ? (
+          <button onClick={handleLogout} style={{ width: '100%', padding: '10px', borderRadius: 8, border: 'none', background: '#ef4444', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden focusable="false" style={{ flex: '0 0 18px' }}>
+              <path d="M16 17l5-5-5-5" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M21 12H9" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M3 5v14a2 2 0 002 2h8" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span>Deconectare</span>
+          </button>
+        ) : (
+          <button onClick={handleLogout} aria-label="Deconectare" style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 6, color: 'var(--text)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden focusable="false"><path d="M16 17l5-5-5-5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/><path d="M21 12H9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/><path d="M3 5v14a2 2 0 002 2h8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </button>
+        )}
+      </div>
     </div>
   );
 }

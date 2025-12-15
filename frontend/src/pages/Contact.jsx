@@ -20,7 +20,7 @@ export default function Contact() {
   const handleChange = (k) => (ev) => {
     setForm(prev => ({ ...prev, [k]: ev.target.value }));
   };
-
+  
   const handleSubmit = async (ev) => {
     ev.preventDefault();
     setStatus(null);
