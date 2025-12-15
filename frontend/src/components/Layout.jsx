@@ -5,6 +5,13 @@ import ErrorBoundary from './ErrorBoundary';
 
 function Layout({ children }) {
     const [open, setOpen] = useState(false);
+    const [dark, setDark] = useState(() => {
+        try {
+            const stored = localStorage.getItem('theme');
+            if (stored) return stored === 'dark';
+            return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        } catch { return false; }
+    });
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -19,6 +26,13 @@ function Layout({ children }) {
     useEffect(() => {
         triggerResize(180);
     }, [location.pathname, triggerResize]);
+
+    useEffect(() => {
+        const root = document.documentElement;
+        if (dark) root.classList.add('dark');
+        else root.classList.remove('dark');
+        try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) { /* ignore */ }
+    }, [dark]);
 
     // Pagini fără TopBar și Sidebar
     const noLayoutPages = ['/login', '/register'];
@@ -35,7 +49,7 @@ function Layout({ children }) {
                 <Sidebar isOpen={open} onToggle={() => { setOpen(p => !p); triggerResize(280); }} onClose={() => { setOpen(false); triggerResize(280); }} />
 
                 {/* top header: fixed position, NOT moved by sidebar */}
-                <header style={{
+                <header className="topbar" style={{
                     position: 'fixed',
                     left: 64, // fixed so header doesn't shift when sidebar opens
                     right: 0,
@@ -45,15 +59,16 @@ function Layout({ children }) {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     padding: '0 16px',
-                    borderBottom: '1px solid rgba(0,0,0,0.06)',
-                    background: '#fff',
                     zIndex: 55,
                     transition: 'none'
                 }}>
                     <div style={{ width: 36 }} /> {/* left spacer */}
-                    <div style={{ fontWeight: 600, color: '#0f172a' }}>RoVia</div>
+                    <div style={{ fontWeight: 600, color: 'var(--text)' }}>RoVia</div>
                     {/* profile / login button on the right */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <button onClick={(e) => { e.stopPropagation(); setDark(d => !d); }} aria-label="Toggle dark mode" style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 6, fontSize: 18 }}>
+                            {dark ? '🌙' : '☀️'}
+                        </button>
                         {/* determine auth */}
                         {(() => {
                             const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -99,7 +114,7 @@ function Layout({ children }) {
                     transition: 'none',
                     minHeight: '100vh',
                     paddingTop: 56, // leave space for fixed header
-                    background: '#ffffff'
+                    background: 'var(--bg)'
                 }}>
                     <div style={{ minHeight: 20 }} />
                     {children}

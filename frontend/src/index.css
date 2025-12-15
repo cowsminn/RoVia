@@ -14,6 +14,52 @@ body {
   -moz-osx-font-smokoothing: grayscale;
 }
 
+:root {
+  --bg: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --card-bg: #f9fafb;
+  --topbar-bg: #ffffff;
+  --border: #e5e7eb;
+  --accent: #3b82f6;
+  --avatar-bg: #3b82f6;
+}
+
+html.dark {
+  --bg: #0b1220;
+  --text: #e6eef8;
+  --muted: #9aa6b2;
+  --card-bg: #0f1724;
+  --topbar-bg: #071021;
+  --border: #1f2937;
+  --accent: #60a5fa;
+  --avatar-bg: #2563eb;
+}
+
+/* Apply sensible defaults using variables */
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+/* Top-level containers and common UI elements */
+.topbar {
+  background: var(--topbar-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.card, .panel {
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+/* Provide a fallback broad override for elements that use inline/background colors
+   (uses !important sparingly to improve dark-mode coverage without refactoring every component) */
+html.dark body, html.dark .card, html.dark .panel {
+  background-color: var(--card-bg) !important;
+  color: var(--text) !important;
+}
+
 /* Stiluri custom pentru range input */
 input[type="range"] {
   background: transparent;

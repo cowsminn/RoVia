@@ -2,12 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Icon = ({ name }) => {
-  if (name === 'home') return <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 11.5L12 4l9 7.5" stroke="#111827" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M5 21V11h14v10" stroke="#111827" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
-  if (name === 'trophy') return <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 3h8v4a4 4 0 01-4 4 4 4 0 01-4-4V3z" stroke="#111827" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M5 8v2a5 5 0 005 5h4a5 5 0 005-5V8" stroke="#111827" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
-  if (name === 'mail') return <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 8.5v7a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="#111827" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M21 8.5L12 14 3 8.5" stroke="#111827" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
-  if (name === 'user') return <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3" stroke="#111827" strokeWidth="1.5"/><path d="M5.5 20a7 7 0 0113 0" stroke="#111827" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
-  if (name === 'plus') return <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#111827" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
-  if (name === 'shield') return <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 5-3.6 9.7-7 10-3.4-.3-7-5-7-10V6l7-3z" stroke="#111827" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+  // SVGs use currentColor so they inherit text color from CSS variables
+  if (name === 'home') return <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 11.5L12 4l9 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M5 21V11h14v10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+  if (name === 'trophy') return <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 3h8v4a4 4 0 01-4 4 4 4 0 01-4-4V3z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M5 8v2a5 5 0 005 5h4a5 5 0 005-5V8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+  if (name === 'mail') return <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 8.5v7a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M21 8.5L12 14 3 8.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+  if (name === 'user') return <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3" stroke="currentColor" strokeWidth="1.5"/><path d="M5.5 20a7 7 0 0113 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+  if (name === 'plus') return <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+  if (name === 'shield') return <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 5-3.6 9.7-7 10-3.4-.3-7-5-7-10V6l7-3z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
   return null;
 };
 
@@ -31,8 +32,8 @@ export default function Sidebar({ isOpen, onToggle, onClose }) {
     left: 0,
     height: '100vh',
     zIndex: 70,
-    background: '#fff',
-    borderRight: '1px solid rgba(0,0,0,0.06)',
+    background: 'var(--card-bg)',
+    borderRight: '1px solid var(--border)',
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
@@ -48,7 +49,7 @@ export default function Sidebar({ isOpen, onToggle, onClose }) {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: '#f3f4f6',
+    background: 'var(--topbar-bg)',
     borderRadius: 8
   };
 
@@ -59,7 +60,7 @@ export default function Sidebar({ isOpen, onToggle, onClose }) {
     padding: '10px 8px',
     cursor: 'pointer',
     borderRadius: 8,
-    color: '#111827',
+    color: 'var(--text)',
     textDecoration: 'none'
   };
 
@@ -80,16 +81,16 @@ export default function Sidebar({ isOpen, onToggle, onClose }) {
             style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 6 }}
           >
             {isOpen ? (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M6 18L18 6" stroke="#111827" strokeWidth="2" strokeLinecap="round"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M6 18L18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
             ) : (
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="#111827" strokeWidth="1.6" strokeLinecap="round"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
             )}
           </button>
         </div>
       </div>
 
       {/* nav: icon-only when closed; icon + labels when open (labels only rendered if isOpen) */}
-      <div style={{ padding: 12, borderBottom: '1px solid rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ padding: 12, borderBottom: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: 8 }}>
         {navItems.map((it, idx) => {
           const itemStyle = { ...itemRowBase, justifyContent: isOpen ? 'flex-start' : 'center', marginTop: idx === 0 ? 0 : 0 };
           return (
@@ -133,19 +134,19 @@ export default function Sidebar({ isOpen, onToggle, onClose }) {
       }}>
         {isOpen ? (
           <>
-            <p style={{ fontSize: 12, color: '#6b7280', margin: '6px 0 12px 0' }}>ATRACȚII TURISTICE</p>
+            <p style={{ fontSize: 12, color: 'var(--muted)', margin: '6px 0 12px 0' }}>ATRACȚII TURISTICE</p>
             {/* simplified static content */}
             <details>
-              <summary style={{ padding: 10, borderRadius: 8, background: '#fff', border: '1px solid #e6eef8', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ width: 34, height: 34, background: '#3b82f6', borderRadius: 8, color: '#fff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>▾</span>
-                <span>Muntenia <small style={{ color: '#9ca3af', marginLeft: 6 }}>(3)</small></span>
+              <summary style={{ padding: 10, borderRadius: 8, background: 'var(--card-bg)', border: '1px solid var(--border)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ width: 34, height: 34, background: 'var(--accent)', borderRadius: 8, color: '#fff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>▾</span>
+                <span>Muntenia <small style={{ color: 'var(--muted)', marginLeft: 6 }}>(3)</small></span>
               </summary>
               <div style={{ padding: 8 }}>
-                <div style={{ borderRadius: 8, background: '#f8fafc', padding: 8, display: 'flex', gap: 8, alignItems: 'center', cursor: 'pointer' }}>
-                  <div style={{ width: 36, height: 36, background: '#10b981', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>📍</div>
+                <div style={{ borderRadius: 8, background: 'var(--card-bg)', padding: 8, display: 'flex', gap: 8, alignItems: 'center', cursor: 'pointer' }}>
+                  <div style={{ width: 36, height: 36, background: 'var(--accent)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>📍</div>
                   <div>
                     <div style={{ fontSize: 14 }}>Palatul Parlamentului</div>
-                    <div style={{ fontSize: 12, color: '#6b7280' }}>București</div>
+                    <div style={{ fontSize: 12, color: 'var(--muted)' }}>București</div>
                   </div>
                 </div>
               </div>
@@ -157,8 +158,8 @@ export default function Sidebar({ isOpen, onToggle, onClose }) {
 
       {/* footer */}
       {isOpen && (
-        <div style={{ borderTop: '1px solid #eef2f6', padding: 12 }}>
-          <div style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center' }}>© 2025 Descoperă România</div>
+        <div style={{ borderTop: '1px solid var(--border)', padding: 12 }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>© 2025 Descoperă România</div>
         </div>
       )}
     </div>
