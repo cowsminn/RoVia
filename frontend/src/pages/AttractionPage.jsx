@@ -16,6 +16,7 @@ function AttractionPage() {
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY
@@ -66,6 +67,7 @@ function AttractionPage() {
             setTimeLeft(quiz.timeLimit);
             setQuizSubmitted(false);
             setResult(null);
+            setCurrentQuestionIndex(0);
         } catch (err) {
             console.error('Eroare la încărcarea quiz-ului:', err);
         }
@@ -127,11 +129,21 @@ function AttractionPage() {
         setTimeLeft(null);
         setQuizSubmitted(false);
         setResult(null);
+        setCurrentQuestionIndex(0);
     };
 
     if (loading) return <div style={{ padding: '20px', textAlign: 'center', color: 'var(--muted)' }}>Se încarcă...</div>;
     if (error) return <div style={{ padding: '20px', textAlign: 'center', color: 'var(--muted)' }}>{error}</div>;
     if (!attraction) return <div style={{ padding: '20px', textAlign: 'center', color: 'var(--muted)' }}>Atracția nu a fost găsită</div>;
+
+    const currentQuestion = quizDetails?.questions?.[currentQuestionIndex];
+    const isLastQuestion = quizDetails ? currentQuestionIndex === quizDetails.questions.length - 1 : false;
+    const isCurrentAnswered = currentQuestion ? Boolean(answers[currentQuestion.id]) : false;
+
+    const handleNextQuestion = () => {
+        if (!isCurrentAnswered || !quizDetails) return;
+        setCurrentQuestionIndex(prev => Math.min(prev + 1, quizDetails.questions.length - 1));
+    };
 
     return (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', padding: '20px', minHeight: 'calc(100vh - 80px)' }}>
@@ -168,7 +180,7 @@ function AttractionPage() {
             </div>
 
             {/* DREAPTA: Quiz sau Hartă */}
-            <div style={{ display: 'grid', gridTemplateRows: activeQuiz ? '1fr' : '1fr 1fr', gap: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateRows: activeQuiz ? '2fr 1fr' : '1fr 1fr', gap: '20px' }}>
                 {/* Quiz Section */}
                 <div style={{ background: 'var(--card-bg)', borderRadius: '12px', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', overflowY: 'auto', border: '1px solid var(--border)' }}>
                     {!activeQuiz ? (
@@ -224,41 +236,71 @@ function AttractionPage() {
                                         +{result.pointsEarned} puncte
                                     </p>
                                 </div>
-                            ) : quizDetails ? (
-                                // Întrebări
+                            ) : quizDetails && currentQuestion ? (
+                                // Întrebare curentă
                                 <>
-                                    {quizDetails.questions.map((q, idx) => (
-                                        <div key={q.id} style={{ marginBottom: '16px', padding: '16px', background: 'var(--card-bg)', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                                            <h4 style={{ margin: '0 0 12px 0', color: 'var(--text)' }}>
-                                                {idx + 1}. {q.text}
-                                            </h4>
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                                {q.answers.map(a => (
-                                                    <label key={a.id} style={{ display: 'flex', alignItems: 'center', padding: '10px', background: answers[q.id] === a.id ? 'rgba(59,130,246,0.06)' : 'transparent', border: answers[q.id] === a.id ? '2px solid var(--accent)' : '1px solid var(--border)', borderRadius: '6px', cursor: 'pointer' }}>
-                                                        <input
-                                                            type="radio"
-                                                            name={`q_${q.id}`}
-                                                            value={a.id}
-                                                            checked={answers[q.id] === a.id}
-                                                            onChange={() => handleAnswerSelect(q.id, a.id)}
-                                                            style={{ marginRight: '10px' }}
-                                                            disabled={quizSubmitted}
-                                                        />
-                                                        <span style={{ color: 'var(--text)' }}>{a.text}</span>
-                                                    </label>
-                                                ))}
-                                            </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', color: 'var(--muted)', fontSize: '14px' }}>
+                                        <span>
+                                            Întrebarea {currentQuestionIndex + 1} / {quizDetails.questions.length}
+                                        </span>
+                                        {!isLastQuestion && (
+                                            <span>
+                                                Mai sunt {quizDetails.questions.length - currentQuestionIndex - 1} întrebări
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div style={{ marginBottom: '16px', padding: '16px', background: 'var(--card-bg)', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                                        <h4 style={{ margin: '0 0 12px 0', color: 'var(--text)', fontSize: '16px' }}>
+                                            {currentQuestion.text}
+                                        </h4>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                            {currentQuestion.answers.map(a => (
+                                                <label
+                                                    key={a.id}
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        padding: '10px',
+                                                        background: answers[currentQuestion.id] === a.id ? 'rgba(59,130,246,0.08)' : 'transparent',
+                                                        border: answers[currentQuestion.id] === a.id ? '2px solid var(--accent)' : '1px solid var(--border)',
+                                                        borderRadius: '6px',
+                                                        cursor: quizSubmitted ? 'not-allowed' : 'pointer'
+                                                    }}
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name={`q_${currentQuestion.id}`}
+                                                        value={a.id}
+                                                        checked={answers[currentQuestion.id] === a.id}
+                                                        onChange={() => handleAnswerSelect(currentQuestion.id, a.id)}
+                                                        style={{ marginRight: '10px' }}
+                                                        disabled={quizSubmitted}
+                                                    />
+                                                    <span style={{ color: 'var(--text)' }}>{a.text}</span>
+                                                </label>
+                                            ))}
                                         </div>
-                                    ))}
-                                    
-                                    {!quizSubmitted && (
-                                        <button
-                                            onClick={handleSubmitQuiz}
-                                            style={{ width: '100%', padding: '14px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', marginTop: '20px' }}
-                                        >
-                                            ✓ Trimite Răspunsurile
-                                        </button>
-                                    )}
+                                        {!quizSubmitted && (
+                                            <button
+                                                onClick={isLastQuestion ? handleSubmitQuiz : handleNextQuestion}
+                                                disabled={!isCurrentAnswered}
+                                                style={{
+                                                    width: '100%',
+                                                    padding: '14px',
+                                                    background: !isCurrentAnswered ? 'var(--muted)' : isLastQuestion ? '#10b981' : 'var(--accent)',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: '8px',
+                                                    fontSize: '16px',
+                                                    fontWeight: 'bold',
+                                                    cursor: !isCurrentAnswered ? 'not-allowed' : 'pointer',
+                                                    marginTop: '16px'
+                                                }}
+                                            >
+                                                {isLastQuestion ? '✓ Trimite Răspunsurile' : 'Următoarea întrebare'}
+                                            </button>
+                                        )}
+                                    </div>
                                 </>
                             ) : (
                                 <p style={{ color: 'var(--muted)' }}>Se încarcă quiz-ul...</p>
@@ -267,26 +309,24 @@ function AttractionPage() {
                     )}
                 </div>
 
-                {/* Mini-hartă (doar când nu e quiz activ) */}
-                {!activeQuiz && (
-                    <div style={{ background: 'var(--card-bg)', borderRadius: '12px', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', border: '1px solid var(--border)' }}>
-                        <h2 style={{ margin: '0 0 12px 0', color: 'var(--text)', fontSize: '16px' }}>
-                            📍 Locație
-                        </h2>
-                        {isLoaded && attraction.latitude && attraction.longitude ? (
-                            <GoogleMap
-                                mapContainerStyle={{ width: '100%', height: '250px', borderRadius: '8px' }}
-                                center={{ lat: attraction.latitude, lng: attraction.longitude }}
-                                zoom={13}
-                                options={{ disableDefaultUI: true, zoomControl: true }}
-                            >
-                                <Marker position={{ lat: attraction.latitude, lng: attraction.longitude }} title={attraction.name} />
-                            </GoogleMap>
-                        ) : (
-                            <p style={{ color: 'var(--muted)' }}>Se încarcă harta...</p>
-                        )}
-                    </div>
-                )}
+                {/* Hartă disponibilă și în timpul quiz-ului */}
+                <div style={{ background: 'var(--card-bg)', borderRadius: '12px', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', border: '1px solid var(--border)' }}>
+                    <h2 style={{ margin: '0 0 12px 0', color: 'var(--text)', fontSize: '16px' }}>
+                        📍 Locație
+                    </h2>
+                    {isLoaded && attraction.latitude && attraction.longitude ? (
+                        <GoogleMap
+                            mapContainerStyle={{ width: '100%', height: '250px', borderRadius: '8px' }}
+                            center={{ lat: attraction.latitude, lng: attraction.longitude }}
+                            zoom={13}
+                            options={{ disableDefaultUI: true, zoomControl: true }}
+                        >
+                            <Marker position={{ lat: attraction.latitude, lng: attraction.longitude }} title={attraction.name} />
+                        </GoogleMap>
+                    ) : (
+                        <p style={{ color: 'var(--muted)' }}>Se încarcă harta...</p>
+                    )}
+                </div>
             </div>
         </div>
     );
